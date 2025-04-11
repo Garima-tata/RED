@@ -47,7 +47,8 @@ def CIFAR10(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
         label_pipeline: List[Operation] = [
             IntDecoder(),
             ToTensor(),
-            ToDevice("cuda:0"),
+            #ToDevice("cuda:0"),
+            ToDevice(torch.device("cuda:0")),
             Squeeze(),
         ]
         image_pipeline: List[Operation] = [SimpleRGBImageDecoder()]
@@ -65,7 +66,8 @@ def CIFAR10(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
         image_pipeline.extend(
             [
                 ToTensor(),
-                ToDevice("cuda:0", non_blocking=True),
+                #ToDevice("cuda:0", non_blocking=True),
+                ToDevice(torch.device("cuda:0"), non_blocking=True),
                 ToTorchImage(),
                 Convert(torch.float16),
                 torchvision.transforms.Normalize(
@@ -111,7 +113,8 @@ def CIFAR100(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
         label_pipeline: List[Operation] = [
             IntDecoder(),
             ToTensor(),
-            ToDevice("cuda:0"),
+            #ToDevice("cuda:0"),
+            ToDevice(torch.device("cuda:0")),
             Squeeze(),
         ]
         image_pipeline: List[Operation] = [SimpleRGBImageDecoder()]
@@ -129,7 +132,8 @@ def CIFAR100(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
         image_pipeline.extend(
             [
                 ToTensor(),
-                ToDevice("cuda:0", non_blocking=True),
+                #ToDevice("cuda:0", non_blocking=True),
+                ToDevice(torch.device("cuda:0"), non_blocking=True),
                 ToTorchImage(),
                 Convert(torch.float16),
                 torchvision.transforms.Normalize(
@@ -178,7 +182,8 @@ def TinyImageNet(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
         label_pipeline: List[Operation] = [
             IntDecoder(),
             ToTensor(),
-            ToDevice("cuda:0"),
+            #ToDevice("cuda:0"),
+            ToDevice(torch.device("cuda:0")),
             Squeeze(),
         ]
         image_pipeline: List[Operation] = [SimpleRGBImageDecoder()]
@@ -196,7 +201,8 @@ def TinyImageNet(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
         image_pipeline.extend(
             [
                 ToTensor(),
-                ToDevice("cuda:0", non_blocking=True),
+                #ToDevice("cuda:0", non_blocking=True),
+                ToDevice(torch.device("cuda:0"), non_blocking=True),
                 ToTorchImage(),
                 Convert(torch.float16),
                 torchvision.transforms.Normalize(

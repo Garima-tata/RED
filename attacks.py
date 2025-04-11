@@ -2,7 +2,8 @@ import os
 import shutil
 
 import torch
-import torchattack.torchattacks as atk
+#import torchattack.torchattacks as atk
+import torchattacks as atk
 import tqdm
 
 import global_args as gargs
