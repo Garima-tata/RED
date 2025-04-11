@@ -23,10 +23,12 @@ from torchvision import transforms
 import global_args as gargs
 
 
-def CIFAR10(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
+#def CIFAR10(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
+def CIFAR10(dir="./data", ffcv_dir="./ffcv_data", batch_size=512):
+    os.makedirs(dir, exist_ok=True)
     datasets = {
-        "train": torchvision.datasets.CIFAR10(dir, train=True, download=True),
-        "test": torchvision.datasets.CIFAR10(dir, train=False, download=True),
+        "train": torchvision.datasets.CIFAR10(root = "./data", train=True, download=True),
+        "test": torchvision.datasets.CIFAR10(root = "./data", train=False, download=True),
     }
 
     os.makedirs(ffcv_dir, exist_ok=True)
@@ -89,10 +91,11 @@ def CIFAR10(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
     return loaders
 
 
-def CIFAR100(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
+#def CIFAR100(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
+def CIFAR100(dir="./data", ffcv_dir="./ffcv_data", batch_size=512):
     datasets = {
-        "train": torchvision.datasets.CIFAR100(dir, train=True, download=True),
-        "test": torchvision.datasets.CIFAR100(dir, train=False, download=True),
+        "train": torchvision.datasets.CIFAR100(root = "./data", train=True, download=True),
+        "test": torchvision.datasets.CIFAR100(root = "./data", train=False, download=True),
     }
 
     os.makedirs(ffcv_dir, exist_ok=True)
@@ -155,7 +158,8 @@ def CIFAR100(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
     return loaders
 
 
-def TinyImageNet(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
+#def TinyImageNet(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
+def TinyImageNet(dir="./data", ffcv_dir="./ffcv_data", batch_size=512):
     # before running this function, prepare TinyImageNet in "dir"
     # see TinyImageNet prepartion in ./TinyImageNet
     # please bash run.sh in ./TinyImageNet before loading TinyImageNet
@@ -224,13 +228,13 @@ def TinyImageNet(dir="/tmp", ffcv_dir="/tmp", batch_size=512):
     return loaders
 
 
-def MNIST(dir="/tmp", batch_size=512):
+def MNIST(dir="./data", batch_size=512):
     datasets = {
         "train": torchvision.datasets.MNIST(
-            dir, train=True, download=True, transform=transforms.ToTensor()
+            root = dir, train=True, download=True, transform=transforms.ToTensor()
         ),
         "test": torchvision.datasets.MNIST(
-            dir, train=False, download=True, transform=transforms.ToTensor()
+            root = dir, train=False, download=True, transform=transforms.ToTensor()
         ),
     }
 

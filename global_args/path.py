@@ -3,12 +3,19 @@ import os as _os
 # feel free to editing paths
 _WORKSPACE_DIR = "./results"
 
-FFCV_FORMAT = "/localscratch/tmp/ffcv{i}"
+#FFCV_FORMAT = "/localscratch/tmp/ffcv{i}"
+#DATASET_DIRS = {
+#    "tinyimagenet": "/localscratch/tmp/tiny-imagenet-200",
+#    "cifar10": "/localscratch/tmp/cifar10",
+#    "cifar100": "/localscratch/tmp/cifar100",
+#    "mnist": "/localscratch/tmp/mnist",
+#}
+FFCV_FORMAT = "./ffcv_data/ffcv{i}"
 DATASET_DIRS = {
-    "tinyimagenet": "/localscratch/tmp/tiny-imagenet-200",
-    "cifar10": "/localscratch/tmp/cifar10",
-    "cifar100": "/localscratch/tmp/cifar100",
-    "mnist": "/localscratch/tmp/mnist",
+    "tinyimagenet": "./data/tiny-imagenet-200",
+    "cifar10": "./data/cifar10",
+    "cifar100": "./data/cifar100",
+    "mnist": "./data/mnist",
 }
 
 
