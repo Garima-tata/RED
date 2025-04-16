@@ -1,6 +1,3 @@
-
-![Overview](fig/image.png)
-
 ## Preparation
 
 Change the path related arguments in [path.py](./global_args/path.py)
