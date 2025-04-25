@@ -5,6 +5,7 @@ import time
 
 import numpy as np
 import torch
+import subprocess 
 
 
 def plot_tensorboard(writer, path, obj, idx, labels=None):
@@ -99,35 +100,54 @@ class AverageMeter(object):
 def run_commands(
     gpus, commands, suffix, call=False, shuffle=True, delay=0.5, ext_command=""
 ):
+    # Create command directory
     command_dir = os.path.join("commands", suffix)
     if len(commands) == 0:
         return
+        
+    # Clear existing directory
     if os.path.exists(command_dir):
         shutil.rmtree(command_dir)
+    os.makedirs(command_dir, exist_ok=True)
+
+    # Create stop script
+    stop_path = os.path.join("commands", f"stop_{suffix}.sh")
+    with open(stop_path, "w") as fout:
+        fout.write(f"kill $(ps aux | grep 'bash {command_dir}' | awk '{{print $2}}')\n")
+
+    # Shuffle if needed
     if shuffle:
         random.shuffle(commands)
         random.shuffle(gpus)
-    os.makedirs(command_dir, exist_ok=True)
 
-    stop_path = os.path.join("commands", "stop_{}.sh".format(suffix))
-    with open(stop_path, "w") as fout:
-        print(
-            "kill $(ps aux|grep 'bash " + command_dir + "'|awk '{print $2}')", file=fout
-        )
-
+    # Generate and execute command files
     n_gpu = len(gpus)
     for i, gpu in enumerate(gpus):
         i_commands = commands[i::n_gpu]
-        if len(i_commands) == 0:
+        if not i_commands:
             continue
-        prefix = "CUDA_VISIBLE_DEVICES={} ".format(gpu)
-        ext_command_i = ext_command.format(i=i)
-
-        sh_path = os.path.join(command_dir, "run{}.sh".format(i))
-        fout = open(sh_path, "w")
-        for com in i_commands:
-            print(prefix + com + ext_command_i, file=fout)
-        fout.close()
+            
+        # Create command file with proper path
+        sh_path = os.path.join(command_dir, f"run{i}.sh")
+        with open(sh_path, "w") as fout:
+            fout.write("#!/bin/bash\n")
+            fout.write(f"export CUDA_VISIBLE_DEVICES={gpu}\n")
+            for com in i_commands:
+                full_cmd = f"{com} {ext_command.format(i=i)}"
+                fout.write(f"{full_cmd}\n")
+        
+        # Make executable
+        os.chmod(sh_path, 0o755)
+        
+        # Execute if requested
         if call:
-            os.system("bash {}&".format(sh_path))
-            time.sleep(delay)
+            try:
+                # Use full path when executing
+                subprocess.Popen(
+                    ["bash", os.path.abspath(sh_path)],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
+                )
+                time.sleep(delay)
+            except Exception as e:
+                print(f"Error executing {sh_path}: {e}")

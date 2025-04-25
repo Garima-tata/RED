@@ -429,7 +429,29 @@ def cross_test_parsing_commands(attr_arch, specific_type=None):
         )
     print(len(commands))
     return commands
-
+# Add this new function to your existing command_utils.py
+def gen_commands_attack_prediction(testing_dir, model_path):
+    """Generate command for direct image prediction"""
+    # Check if images exist
+    image_extensions = ['.jpg', '.jpeg', '.png', '.bmp']
+    has_images = any(f.lower().endswith(ext) for ext in image_extensions 
+                for f in os.listdir(testing_dir))
+    
+    if not has_images:
+        print(f"No images found in {testing_dir}")
+        return []
+    
+    # Check if prediction already exists
+    prediction_file = os.path.join(testing_dir, "predictions.json")
+    if os.path.exists(prediction_file):
+        print("Predictions already exist - use --force to overwrite")
+        return []
+    
+    # Single command for all images in folder
+    command = f"python attack_predictor.py --input-folder {testing_dir}"
+    command += f" --model-path {model_path}"
+    
+    return [command]
 
 if __name__ == "__main__":
     import argparse
@@ -462,11 +484,26 @@ if __name__ == "__main__":
         action="store_true",
         help="Using denoiser when training attribute models.",
     )
+    parser.add_argument(
+        "--predict-attack",
+        action="store_true",
+        help="Run attack type prediction",
+    )
+    parser.add_argument(
+        "--attack-model-path",
+        type=str,
+        default="C:\\Users\\ETI\\Downloads\\resnet18_imagefolder.pth",
+        help="Path to attack prediction model",
+    )
     args = parser.parse_args()
     debug = args.debug
     stage = args.stage
     th = args.thread
     gpus = [int(g) for g in args.gpus.split(",")]
+    
+ 
+    
+    
 
     # call each code block seperatly
 
@@ -555,3 +592,17 @@ if __name__ == "__main__":
             shuffle=False,
             delay=2,
         )
+    elif stage == 4:
+        testing_dir = "C:\\Users\\ETI\\Downloads\\testing"  # Set your testing folder path
+        commands = gen_commands_attack_prediction(testing_dir, args.attack_model_path)
+        print(f"Generated {len(commands)} prediction command")
+        if commands:
+            run_commands(
+                gpus * th if not debug else [0],
+                commands,
+                call=not debug,
+                suffix="commands4",
+                shuffle=False,
+                delay=1,
+            )
+    
