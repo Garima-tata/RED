@@ -12,7 +12,6 @@ attack_img
 *.tar
 *.pkl
 *.bat
-*.pth
 *.png
 *.jpg
 *.sh
