@@ -593,7 +593,7 @@ if __name__ == "__main__":
             delay=2,
         )
     elif stage == 4:
-        testing_dir = "C:\\Users\\ETI\\Downloads\\testing"  # Set your testing folder path
+        testing_dir = "testing"  # Set your testing folder path
         commands = gen_commands_attack_prediction(testing_dir, args.attack_model_path)
         print(f"Generated {len(commands)} prediction command")
         if commands:
